@@ -1,11 +1,11 @@
-import axios from 'axios';
-import fetchCountries from './fetchCountries';
 import _debounce from 'lodash.debounce';
+import fetchCountries from './fetchCountries';
 import countryCardTpl from '../templates/countryCardTpl.hbs';
 import countryListTpl from '../templates/countryListTpl.hbs';
-import { alert } from '@pnotify/core';
 
-axios.defaults.baseURL = 'https://restcountries.eu/rest/v2/name';
+import { alert } from '@pnotify/core';
+import '@pnotify/core/dist/BrightTheme.css';
+import '@pnotify/core/dist/PNotify.css';
 
 const refs = {
   inputCountry: document.querySelector('.js-search__input'),
@@ -31,7 +31,6 @@ const renderMarkup = data => {
     render(countryListMakup);
   }
   if (contriesArr >= 10) {
-    alert('Too many matches found. Please enter a more specific query');
     tooManyMachesFound();
   }
 };
@@ -40,8 +39,16 @@ function onInputClick() {
   emptyCountryList();
 
   const countryName = refs.inputCountry.value;
-  fetchCountries(countryName).then(renderMarkup);
+  fetchCountries(countryName).then(renderMarkup).catch(tooManyMachesFound);
 }
 
-console.log({ alert });
-const tooManyMachesFound = () => {};
+const tooManyMachesFound = () => {
+  alert({
+    type: 'notice',
+    text: 'To many matches found. Please enter a more specific query!',
+    delay: 3000,
+    sticker: false,
+    animateSpeed: 'slow',
+    delay: 8000,
+  });
+};
