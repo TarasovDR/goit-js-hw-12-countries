@@ -49,6 +49,5 @@ const tooManyMachesFound = () => {
     delay: 3000,
     sticker: false,
     animateSpeed: 'slow',
-    delay: 8000,
   });
 };
